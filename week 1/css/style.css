@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f8fcf9;
+}
+
+h1,
+h2,
+h3,
+h5,
+.navbar-brand {
+  font-family: "El Messiri", sans-serif !important;
+}
+
+.hero-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.6)),
+    url("../assets/pola-ramadhan.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+.card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.navbar {
+  background: linear-gradient(135deg, #198754 0%, #146c43 100%) !important;
+}
+
+.btn-success {
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: scale(1.05);
+}
