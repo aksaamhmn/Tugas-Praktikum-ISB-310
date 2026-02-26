@@ -12,6 +12,7 @@ Repository ini berisi kumpulan tugas untuk mata kuliah ISB-310 Praktikum Sistem 
 ## Daftar Tugas Praktikum
 
 - [Week 1: Sistem Manajemen Dapur Takjil Ramadhan](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-1)
+- [Week 2: Interaktivitas JavaScript & Web Storage (Dapur Takjil Dinamis)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-2)
 - _(Akan terus diperbarui setiap minggu)_
 
 ---
