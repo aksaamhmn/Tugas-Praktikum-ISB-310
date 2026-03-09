@@ -1,0 +1,130 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["login"])) {
+  header("Location: login.php");
+  exit;
+}
+?>
+
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelola Data - Dapur Takjil</title>
+  <link rel="icon" type="image/jpeg" href="assets/favicon.jpeg" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.php">
+        <i class="bi bi-shop me-2"></i>Dapur Takjil
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="index.php">
+              <i class="bi bi-house-door me-1"></i>Beranda
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="kelola.php">
+              <i class="bi bi-clipboard-data me-1"></i>Kelola Data
+            </a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <button id="btnTema" class="btn btn-outline-light btn-sm">
+              <i class="bi bi-moon-fill" id="ikonTema"></i>
+            </button>
+          </li>
+          <li class="nav-item ms-lg-3 me-lg-3 mt-2 mt-lg-0 d-flex align-items-center">
+            <span class="text-white fw-medium">
+              <i class="bi bi-person-circle me-1"></i> Hai, <?= htmlspecialchars($_SESSION["username"]); ?>!
+            </span>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="logout.php" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin keluar?');">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container mt-5 mb-5 flex-grow-1">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-success border-opacity-25">
+          <div class="card-header bg-success text-white py-3">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-file-earmark-plus me-2"></i>Input Data Takjil Baru
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            <form action="#" method="POST">
+              <div class="mb-3">
+                <label for="namaMenu" class="form-label fw-bold text-secondary">Nama Menu</label>
+                <input type="text" class="form-control" id="namaMenu" placeholder="Contoh: Es Buah, Nasi Kotak..." required />
+              </div>
+
+              <div class="mb-3">
+                <label for="kategori" class="form-label fw-bold text-secondary">Kategori</label>
+                <select class="form-select" id="kategori" required>
+                  <option value="" selected disabled>Pilih Kategori...</option>
+                  <option value="makanan">Makanan Berat</option>
+                  <option value="jajanan">Kue / Jajanan</option>
+                  <option value="minuman">Minuman</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="jumlahPorsi" class="form-label fw-bold text-secondary">Jumlah Porsi</label>
+                <input type="number" class="form-control" id="jumlahPorsi" placeholder="Masukkan angka" min="1" required />
+              </div>
+
+              <div class="mb-4">
+                <label for="penanggungJawab" class="form-label fw-bold text-secondary">Penanggung Jawab / Donatur</label>
+                <input type="text" class="form-control" id="penanggungJawab" placeholder="Nama individu atau organisasi" required />
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">
+                  <i class="bi bi-save me-2"></i>Simpan Data Takjil
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-success text-white text-center py-3 mt-auto shadow-sm">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Sistem Manajemen Dapur Takjil - Muhammad Aqsha Muhaimin (16-2023-003)</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
