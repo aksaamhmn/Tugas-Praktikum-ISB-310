@@ -15,6 +15,7 @@ Repository ini berisi kumpulan tugas untuk mata kuliah ISB-310 Praktikum Sistem 
 - [Week 2: Interaktivitas JavaScript & Web Storage (Dapur Takjil Dinamis)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-2)
 - [Week 3: PHP Session & Cookies (Autentikasi Dapur Takjil)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-3)
 - [Week 4: Transformasi MVC Framework (Migrasi ke Laravel)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-4)
+- [Week 5: MVC (Model, View, Controller)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-5)
 - _(Akan terus diperbarui setiap minggu)_
 
 ---
