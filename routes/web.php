@@ -2,12 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
-// Rute untuk Halaman Utama & Kelola
-Route::get('/', [AuthController::class, 'index']);
-Route::get('/kelola', [AuthController::class, 'kelola']);
+// Rute Halaman Utama
+Route::get('/', [ProductController::class, 'index']);
 
-// Rute untuk Autentikasi (Login & Logout)
+// Rute Kelola Data (Menampilkan Form & Menyimpan Data)
+Route::get('/kelola', [ProductController::class, 'kelola']);
+Route::post('/kelola', [ProductController::class, 'store']);
+
+// Rute Autentikasi
 Route::get('/login', [AuthController::class, 'showLogin']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);

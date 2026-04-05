@@ -11,28 +11,40 @@
                     <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>Input Data Takjil Baru</h5>
                 </div>
                 <div class="card-body p-4">
-                    <form action="#" method="POST">
+                    <form action="{{ url('/kelola') }}" method="POST">
+                        @csrf
+
                         <div class="mb-3">
-                            <label for="namaMenu" class="form-label fw-bold text-secondary">Nama Menu</label>
-                            <input type="text" class="form-control" id="namaMenu" placeholder="Contoh: Es Buah, Nasi Kotak..." required />
+                            <label for="product_name" class="form-label fw-bold text-secondary">Nama Menu</label>
+                            <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Contoh: Es Buah, Nasi Kotak..." required />
                         </div>
+
                         <div class="mb-3">
-                            <label for="kategori" class="form-label fw-bold text-secondary">Kategori</label>
-                            <select class="form-select" id="kategori" required>
+                            <label for="category_id" class="form-label fw-bold text-secondary">Kategori</label>
+                            <select class="form-select" id="category_id" name="category_id" required>
                                 <option value="" selected disabled>Pilih Kategori...</option>
-                                <option value="makanan">Makanan Berat</option>
-                                <option value="jajanan">Kue / Jajanan</option>
-                                <option value="minuman">Minuman</option>
+                                @foreach ($categories as $cat)
+                                <option value="{{ $cat->category_id }}">{{ $cat->category_name }}</option>
+                                @endforeach
                             </select>
                         </div>
+
                         <div class="mb-3">
-                            <label for="jumlahPorsi" class="form-label fw-bold text-secondary">Jumlah Porsi</label>
-                            <input type="number" class="form-control" id="jumlahPorsi" placeholder="Masukkan angka" min="1" required />
+                            <label for="nama_brand" class="form-label fw-bold text-secondary">Pihak Donatur (Brand)</label>
+                            <input type="text" class="form-control" id="nama_brand" name="nama_brand" placeholder="Contoh: Hamba Allah, DKM Masjid..." required />
                         </div>
-                        <div class="mb-4">
-                            <label for="penanggungJawab" class="form-label fw-bold text-secondary">Penanggung Jawab / Donatur</label>
-                            <input type="text" class="form-control" id="penanggungJawab" placeholder="Nama individu atau organisasi" required />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="product_price" class="form-label fw-bold text-secondary">Harga (Estimasi)</label>
+                                <input type="number" class="form-control" id="product_price" name="product_price" placeholder="Contoh: 15000" min="0" required />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="product_stock" class="form-label fw-bold text-secondary">Jumlah Porsi (Stok)</label>
+                                <input type="number" class="form-control" id="product_stock" name="product_stock" placeholder="Masukkan angka" min="1" required />
+                            </div>
                         </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-sm">
                                 <i class="bi bi-save me-2"></i>Simpan Data Takjil
