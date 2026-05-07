@@ -16,6 +16,7 @@ Repository ini berisi kumpulan tugas untuk mata kuliah ISB-310 Praktikum Sistem 
 - [Week 3: PHP Session & Cookies (Autentikasi Dapur Takjil)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-3)
 - [Week 4: Transformasi MVC Framework (Migrasi ke Laravel)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-4)
 - [Week 5: MVC (Model, View, Controller)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-5)
+- [Week 9: Advanced CRUD, Image Upload, Breeze Auth, and Role Middleware)](https://github.com/aksaamhmn/Tugas-Praktikum-ISB-310/tree/week-9)
 - _(Akan terus diperbarui setiap minggu)_
 
 ---
