@@ -2,61 +2,76 @@
 
 ## Overview Project
 
-Pada pengembangan **Week 5** ini, proyek Dapur Takjil telah berevolusi dari sekadar kerangka antarmuka menjadi aplikasi dinamis yang terintegrasi penuh dengan **Database MySQL**. Fokus utama pada pembaruan ini adalah implementasi struktur _Database Relasional_, _Migrations_, _Database Seeding_, dan pemanfaatan **Eloquent ORM** bawaan Laravel untuk mengelola relasi antar tabel (One-to-Many).
+Pada pengembangan **Week 9** ini, proyek Dapur Takjil telah bertransformasi menjadi aplikasi manajemen yang komprehensif berstandar industri. Fokus utama pembaruan ini adalah implementasi **Advanced CRUD** dengan fitur **Upload Gambar**, penguatan sistem keamanan menggunakan **Laravel Breeze**, serta penerapan **Role Management** (Admin & User) yang dikendalikan melalui **Custom Middleware**.
 
 ---
 
-## Fitur Sistem
+## Fitur Utama Sistem
 
-Selain mempertahankan sistem Autentikasi Session dan UI _Dark Mode_ dari minggu sebelumnya, aplikasi kini memiliki kemampuan manajemen data tingkat lanjut:
+Aplikasi kini memiliki alur kerja dinamis dengan fitur-fitur wajib sebagai berikut:
 
-1. **Integrasi Database Terpusat:** Seluruh data menu, kategori, dan donatur kini disimpan dan dipanggil secara _real-time_ dari _database_ MySQL.
-2. **Relasi Data Dinamis (One-to-Many):** Setiap menu takjil memiliki keterikatan relasional secara langsung dengan satu Kategori dan satu entitas Donatur (Brand).
-3. **Smart Data Insertion:** Form "Kelola Data" kini dilengkapi logika `firstOrCreate`, di mana pengguna dapat mengetikkan nama donatur baru secara bebas, dan sistem akan secara otomatis mendaftarkannya ke tabel `brands` tanpa memutus relasi data.
-4. **Automated Data Seeding:** Dilengkapi dengan skrip _Seeder_ yang dapat menyuntikkan puluhan data _dummy_ awal secara instan hanya dengan satu baris perintah terminal (`migrate:fresh --seed`).
+1. **Slicing Template & Modularitas:** Menggunakan teknik pembagian layout menjadi komponen modular (_navbar_, _layouts_, _partials_) untuk efisiensi kode menggunakan Blade Templating.
+2. **Advanced CRUD dengan Image Upload:** Pengelolaan data menu takjil kini mendukung pengunggahan file fisik gambar ke server, lengkap dengan validasi dan otomatisasi penghapusan file lama saat di-_update_ atau di-_delete_.
+3. **Autentikasi Laravel Breeze:** Implementasi sistem login, registrasi, dan logout yang kokoh menggunakan _package_ resmi Laravel Breeze.
+4. **Role Management (Admin & User):** - **Admin:** Memiliki otoritas penuh untuk mengelola data (Tambah, Lihat, Edit, Hapus).
+    - **User:** Hanya memiliki akses untuk melihat katalog menu takjil tanpa izin modifikasi.
+5. **Keamanan Middleware:** Seluruh rute sensitif dilindungi oleh _Middleware Auth_ dan _Custom Middleware Role_ untuk mencegah akses ilegal.
+6. **Manajemen Profil & Storage:** Pengguna dapat mengelola informasi profil termasuk mengunggah foto profil yang disimpan secara aman di direktori _storage_ Laravel.
 
 ---
 
-## Struktur Direktori Proyek (Laravel Architecture)
+## Struktur Direktori Proyek (Advanced Architecture)
 
-Pemisahan struktur kini semakin kompleks dan rapi dengan masuknya komponen Model dan entitas _Database_:
+Struktur proyek kini mencakup komponen autentikasi dan manajemen file fisik:
 
     dapur-takjil-laravel/
     │
     ├── app/
     │   ├── Http/Controllers/
-    │   │   ├── AuthController.php       # Logika Autentikasi (Login/Logout)
-    │   │   └── ProductController.php    # Otak pengelola CRUD menu takjil
-    │   │
+    │   │   ├── ProductController.php    # CRUD Produk dengan logika Upload & Role
+    │   │   └── ProfileController.php    # Manajemen Profil & Foto User
+    │   ├── Http/Middleware/
+    │   │   └── CheckRole.php            # Satpam penyeleksi Role Admin/User
     │   └── Models/
-    │       ├── Category.php             # Representasi tabel categories
-    │       ├── Brand.php                # Representasi tabel brands (Donatur)
-    │       └── Product.php              # Representasi tabel products (Menu)
+    │       ├── Product.php              # Model Produk dengan kolom image
+    │       └── User.php                 # Model User dengan kolom role & profile_image
     │
     ├── database/
-    │   ├── migrations/                  # Cetak biru (blueprint) struktur tabel database
-    │   └── seeders/
-    │       └── DatabaseSeeder.php       # Skrip injeksi data dummy (13 menu takjil)
+    │   └── migrations/                  # Migration tabel dengan kolom image & role
+    │
+    ├── public/
+    │   └── storage/                     # Symlink ke direktori storage asli
     │
     ├── resources/views/
     │   ├── layouts/
-    │   │   └── main.blade.php           # Master Template
-    │   ├── product.blade.php            # Tampilan Utama (Katalog Menu Dinamis)
-    │   ├── kelola.blade.php             # Tampilan Form Kelola Data
-    │   └── login.blade.php              # Tampilan Form Autentikasi
+    │   │   └── main.blade.php           # Master Layout Utama
+    │   ├── partials/
+    │   │   └── navbar.blade.php         # Navbar dinamis (Auth/Guest)
+    │   ├── profile/                     # View manajemen profil Breeze
+    │   └── product.blade.php            # View Katalog dinamis dengan tombol aksi
     │
-    └── routes/
-        └── web.php                      # Pengatur lalu lintas URL aplikasi
+    ├── routes/
+    │   ├── web.php                      # Routing dengan proteksi Middleware
+    │   └── auth.php                     # Rute Autentikasi bawaan Breeze
+    │
+    └── storage/app/public/              # Direktori fisik penyimpanan gambar
 
 ---
 
-## Penjelasan Teknis Transformasi (Week 5)
+## Penjelasan Teknis Transformasi (Week 9)
 
-1. **Database Migrations:**
-   Pembuatan tabel tidak lagi dilakukan secara manual di phpMyAdmin. Kita menggunakan skrip PHP (_Migration_) untuk membangun skema tabel `categories`, `brands`, dan `products`, lengkap dengan penetapan _Primary Key_, _Foreign Key_, dan aturan `onDelete('cascade')` untuk menjaga integritas data.
-2. **Eloquent Relationships:**
-   Menghubungkan antar entitas tabel menggunakan fungsi bawaan Laravel. Tabel `Category` dan `Brand` memiliki relasi `hasMany` (memiliki banyak produk), sedangkan tabel `Product` menggunakan `belongsTo` untuk merujuk kembali ke tabel induknya.
-3. **Eager Loading di Controller:**
-   Pada `ProductController`, pemanggilan data produk menggunakan metode `Product::with(['category', 'brand'])->get()`. Teknik _Eager Loading_ ini mengatasi masalah performa (N+1 _query problem_) dengan menarik semua relasi sekaligus dalam satu _query_ efisien.
-4. **Pembaruan View (Blade):**
-   Halaman `product.blade.php` tidak lagi menggunakan data _hardcode_ HTML. Data kini di-_render_ secara dinamis menggunakan sintaks perulangan `@foreach ($products as $item)`, menampilkan properti spesifik seperti `{{ $item->product_name }}` dan data relasinya seperti `{{ $item->brand->nama_brand }}`.
+### 1. Slicing Template & Layouting
+
+Menerapkan perintah `@yield` pada _Master Layout_ sebagai ruang dinamis dan `@extends` pada halaman anak. Komponen seperti _Navbar_ dipisahkan ke dalam folder `partials` dan dipanggil menggunakan `@include` untuk memudahkan pemeliharaan kode.
+
+### 2. Sistem Storage & Upload Gambar
+
+Pengiriman file menggunakan atribut `enctype="multipart/form-data"` pada form HTML. Di sisi server, sistem memisahkan penyimpanan: nama file masuk ke database, sementara file fisik disimpan di `storage/app/public/`. Perintah `php artisan storage:link` dijalankan untuk membuat _symlink_ agar gambar dapat diakses oleh publik.
+
+### 3. Middleware & Keamanan Berbasis Role
+
+Dibuat _Custom Middleware_ (`CheckRole`) yang didaftarkan di `bootstrap/app.php`. Middleware ini bertugas mengecek properti `role` pada tabel `users`. Jika pengguna dengan role 'user' mencoba mengakses rute CRUD Admin, sistem akan secara otomatis melakukan _redirect_ balik ke halaman utama.
+
+### 4. Integrasi Laravel Breeze
+
+Mengganti sistem login manual dengan Breeze untuk mendapatkan fitur autentikasi standar industri. Tampilan navbar kini adaptif menggunakan _directive_ `@auth` dan `@guest`, serta menampilkan foto profil pengguna secara dinamis dari database.

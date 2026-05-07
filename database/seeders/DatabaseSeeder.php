@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +12,28 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $now = Carbon::now();
+
+        // 0. Data Dummy Akun Admin dan User
+        DB::table('users')->insert([
+            [
+                'name' => 'Admin Takjil',
+                'email' => 'admin@takjil.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role' => 'admin',
+                'profile_image' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'name' => 'User Warga',
+                'email' => 'user@warga.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role' => 'user',
+                'profile_image' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ]
+        ]);
 
         // 1. Data Category (5 Kategori)
         DB::table('categories')->insert([

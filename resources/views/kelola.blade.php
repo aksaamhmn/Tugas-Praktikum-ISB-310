@@ -11,7 +11,7 @@
                     <h5 class="mb-0 fw-bold"><i class="bi bi-file-earmark-plus me-2"></i>Input Data Takjil Baru</h5>
                 </div>
                 <div class="card-body p-4">
-                    <form action="{{ url('/kelola') }}" method="POST">
+                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -43,6 +43,11 @@
                                 <label for="product_stock" class="form-label fw-bold text-secondary">Jumlah Porsi (Stok)</label>
                                 <input type="number" class="form-control" id="product_stock" name="product_stock" placeholder="Masukkan angka" min="1" required />
                             </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="product_image" class="form-label fw-bold text-secondary">Foto Takjil</label>
+                            <input type="file" class="form-control" id="product_image" name="product_image" accept="image/*" required />
                         </div>
 
                         <div class="d-grid">
