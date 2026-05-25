@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
+use App\Rules\ReCaptcha;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -30,11 +31,18 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+
+        // Tambahkan validasi reCAPTCHA hanya jika bukan environment testing
+        if (!app()->runningUnitTests()) {
+            $rules['g-recaptcha-response'] = ['required', new ReCaptcha];
+        }
+
+        $request->validate($rules);
 
         $user = User::create([
             'name' => $request->name,

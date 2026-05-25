@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
+use App\Rules\ReCaptcha;
+
 class LoginRequest extends FormRequest
 {
     /**
@@ -27,10 +29,17 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
+
+        // Tambahkan validasi reCAPTCHA hanya jika bukan environment testing
+        if (!app()->runningUnitTests()) {
+            $rules['g-recaptcha-response'] = ['required', new ReCaptcha];
+        }
+
+        return $rules;
     }
 
     /**

@@ -2,76 +2,161 @@
 
 ## Overview Project
 
-Pada pengembangan **Week 9** ini, proyek Dapur Takjil telah bertransformasi menjadi aplikasi manajemen yang komprehensif berstandar industri. Fokus utama pembaruan ini adalah implementasi **Advanced CRUD** dengan fitur **Upload Gambar**, penguatan sistem keamanan menggunakan **Laravel Breeze**, serta penerapan **Role Management** (Admin & User) yang dikendalikan melalui **Custom Middleware**.
+Pada pengembangan **Week 10** ini, proyek Dapur Takjil ditingkatkan dengan fokus pada **keamanan aplikasi**, **autentikasi modern**, dan **pengujian otomatis**. Pembaruan utama mencakup implementasi **Google reCAPTCHA v2** sebagai proteksi anti-bot pada form publik, integrasi **Login Google (SSO)** menggunakan **Laravel Socialite** untuk kemudahan akses pengguna, serta penerapan **Feature Testing** dengan **PHPUnit** guna memastikan kualitas dan keandalan setiap rute aplikasi.
 
 ---
 
 ## Fitur Utama Sistem
 
-Aplikasi kini memiliki alur kerja dinamis dengan fitur-fitur wajib sebagai berikut:
+Selain fitur yang sudah ada dari minggu-minggu sebelumnya, aplikasi kini dilengkapi dengan fitur-fitur baru sebagai berikut:
 
-1. **Slicing Template & Modularitas:** Menggunakan teknik pembagian layout menjadi komponen modular (_navbar_, _layouts_, _partials_) untuk efisiensi kode menggunakan Blade Templating.
-2. **Advanced CRUD dengan Image Upload:** Pengelolaan data menu takjil kini mendukung pengunggahan file fisik gambar ke server, lengkap dengan validasi dan otomatisasi penghapusan file lama saat di-_update_ atau di-_delete_.
-3. **Autentikasi Laravel Breeze:** Implementasi sistem login, registrasi, dan logout yang kokoh menggunakan _package_ resmi Laravel Breeze.
-4. **Role Management (Admin & User):** - **Admin:** Memiliki otoritas penuh untuk mengelola data (Tambah, Lihat, Edit, Hapus).
-    - **User:** Hanya memiliki akses untuk melihat katalog menu takjil tanpa izin modifikasi.
-5. **Keamanan Middleware:** Seluruh rute sensitif dilindungi oleh _Middleware Auth_ dan _Custom Middleware Role_ untuk mencegah akses ilegal.
-6. **Manajemen Profil & Storage:** Pengguna dapat mengelola informasi profil termasuk mengunggah foto profil yang disimpan secara aman di direktori _storage_ Laravel.
+1. **Keamanan Anti-Bot (Google reCAPTCHA v2):** Implementasi widget Google reCAPTCHA v2 pada halaman **Login** dan **Register** untuk mencegah serangan _bot_ dan _spam_. Sistem secara otomatis menolak form (_redirect back with errors_) jika pengguna tidak mencentang reCAPTCHA.
+2. **Single Sign-On (SSO) Google dengan Laravel Socialite:** Menyediakan alternatif login menggunakan akun Google. Jika pengguna berhasil login melalui Google, sistem mencatat datanya ke database atau langsung mengizinkan masuk jika email sudah terdaftar.
+3. **Quality Assurance / Pengujian Otomatis (PHPUnit):** Pembuatan file _Feature Test_ (`ProjectFeatureTest.php`) yang berisi minimal 2 skenario pengujian rute HTTP untuk memastikan aplikasi berjalan normal, mencakup pengujian status HTTP 200 dan 302.
 
 ---
 
-## Struktur Direktori Proyek (Advanced Architecture)
+## Struktur Direktori Proyek (Week 10 Architecture)
 
-Struktur proyek kini mencakup komponen autentikasi dan manajemen file fisik:
+Struktur proyek kini mencakup komponen keamanan, autentikasi modern, dan pengujian:
 
     dapur-takjil-laravel/
     │
     ├── app/
     │   ├── Http/Controllers/
-    │   │   ├── ProductController.php    # CRUD Produk dengan logika Upload & Role
-    │   │   └── ProfileController.php    # Manajemen Profil & Foto User
+    │   │   ├── Auth/
+    │   │   │   ├── AuthenticatedSessionController.php  # Login standar dengan reCAPTCHA
+    │   │   │   ├── GoogleController.php                # [NEW] Handler SSO Google
+    │   │   │   └── RegisteredUserController.php        # Registrasi dengan reCAPTCHA
+    │   │   ├── ProductController.php                   # CRUD Produk
+    │   │   └── ProfileController.php                   # Manajemen Profil
+    │   ├── Http/Requests/Auth/
+    │   │   └── LoginRequest.php                        # [MODIFIED] Validasi + reCAPTCHA
     │   ├── Http/Middleware/
-    │   │   └── CheckRole.php            # Satpam penyeleksi Role Admin/User
+    │   │   └── CheckRole.php                           # Middleware Role Admin/User
+    │   ├── Rules/
+    │   │   └── ReCaptcha.php                           # [NEW] Custom Validation Rule reCAPTCHA
     │   └── Models/
-    │       ├── Product.php              # Model Produk dengan kolom image
-    │       └── User.php                 # Model User dengan kolom role & profile_image
+    │       └── User.php                                # Model User
+    │
+    ├── config/
+    │   └── services.php                                # [MODIFIED] Konfigurasi Google & reCAPTCHA
     │
     ├── database/
-    │   └── migrations/                  # Migration tabel dengan kolom image & role
-    │
-    ├── public/
-    │   └── storage/                     # Symlink ke direktori storage asli
+    │   ├── factories/
+    │   │   └── UserFactory.php                         # [NEW] Factory untuk testing
+    │   └── migrations/
     │
     ├── resources/views/
-    │   ├── layouts/
-    │   │   └── main.blade.php           # Master Layout Utama
-    │   ├── partials/
-    │   │   └── navbar.blade.php         # Navbar dinamis (Auth/Guest)
-    │   ├── profile/                     # View manajemen profil Breeze
-    │   └── product.blade.php            # View Katalog dinamis dengan tombol aksi
+    │   ├── auth/
+    │   │   ├── login.blade.php                         # [MODIFIED] + reCAPTCHA + Tombol Google
+    │   │   └── register.blade.php                      # [MODIFIED] + reCAPTCHA
+    │   └── layouts/
     │
     ├── routes/
-    │   ├── web.php                      # Routing dengan proteksi Middleware
-    │   └── auth.php                     # Rute Autentikasi bawaan Breeze
+    │   ├── web.php
+    │   └── auth.php                                    # [MODIFIED] + Route Google SSO
     │
-    └── storage/app/public/              # Direktori fisik penyimpanan gambar
+    ├── tests/Feature/
+    │   ├── ProjectFeatureTest.php                      # [NEW] Pengujian HTTP 200 & 302
+    │   └── ExampleTest.php                             # [MODIFIED] + RefreshDatabase
+    │
+    └── .env                                            # [MODIFIED] + Variabel reCAPTCHA & Google
 
 ---
 
-## Penjelasan Teknis Transformasi (Week 9)
+## Penjelasan Teknis Pengembangan (Week 10)
 
-### 1. Slicing Template & Layouting
+### 1. Keamanan Anti-Bot (Google reCAPTCHA v2)
 
-Menerapkan perintah `@yield` pada _Master Layout_ sebagai ruang dinamis dan `@extends` pada halaman anak. Komponen seperti _Navbar_ dipisahkan ke dalam folder `partials` dan dipanggil menggunakan `@include` untuk memudahkan pemeliharaan kode.
+Diimplementasikan widget Google reCAPTCHA v2 pada halaman **Login** dan **Register**. Pada sisi _front-end_, widget reCAPTCHA ditampilkan menggunakan script resmi Google (`https://www.google.com/recaptcha/api.js`) dan elemen `<div class="g-recaptcha">`. Pada sisi _back-end_, dibuat **Custom Validation Rule** (`App\Rules\ReCaptcha`) yang memverifikasi token reCAPTCHA melalui API Google (`siteverify`). Jika pengguna tidak mencentang reCAPTCHA, form akan ditolak dan menampilkan pesan error.
 
-### 2. Sistem Storage & Upload Gambar
+**File terkait:**
+- `app/Rules/ReCaptcha.php` — Custom Rule untuk validasi token reCAPTCHA
+- `app/Http/Requests/Auth/LoginRequest.php` — Integrasi validasi reCAPTCHA pada login
+- `app/Http/Controllers/Auth/RegisteredUserController.php` — Integrasi validasi reCAPTCHA pada registrasi
+- `resources/views/auth/login.blade.php` — Widget reCAPTCHA pada form login
+- `resources/views/auth/register.blade.php` — Widget reCAPTCHA pada form register
 
-Pengiriman file menggunakan atribut `enctype="multipart/form-data"` pada form HTML. Di sisi server, sistem memisahkan penyimpanan: nama file masuk ke database, sementara file fisik disimpan di `storage/app/public/`. Perintah `php artisan storage:link` dijalankan untuk membuat _symlink_ agar gambar dapat diakses oleh publik.
+### 2. Single Sign-On (SSO) Google dengan Laravel Socialite
 
-### 3. Middleware & Keamanan Berbasis Role
+Diinstal _package_ `laravel/socialite` untuk mengimplementasikan login menggunakan akun Google. Dibuat controller khusus (`GoogleController`) yang menangani dua proses utama:
+- **Redirect ke Google** (`/auth/google`): Mengarahkan pengguna ke halaman autentikasi Google.
+- **Callback dari Google** (`/auth/google/callback`): Memproses data pengguna yang dikembalikan oleh Google. Jika email sudah terdaftar di database, pengguna langsung login. Jika belum, sistem membuat akun baru secara otomatis dengan role default `user`.
 
-Dibuat _Custom Middleware_ (`CheckRole`) yang didaftarkan di `bootstrap/app.php`. Middleware ini bertugas mengecek properti `role` pada tabel `users`. Jika pengguna dengan role 'user' mencoba mengakses rute CRUD Admin, sistem akan secara otomatis melakukan _redirect_ balik ke halaman utama.
+Tombol "Masuk dengan Google" ditampilkan pada halaman login dengan desain yang responsif dan ikon SVG resmi Google.
 
-### 4. Integrasi Laravel Breeze
+**File terkait:**
+- `app/Http/Controllers/Auth/GoogleController.php` — Controller SSO Google
+- `routes/auth.php` — Route `/auth/google` dan `/auth/google/callback`
+- `resources/views/auth/login.blade.php` — Tombol "Masuk dengan Google"
+- `config/services.php` — Konfigurasi credential Google OAuth
 
-Mengganti sistem login manual dengan Breeze untuk mendapatkan fitur autentikasi standar industri. Tampilan navbar kini adaptif menggunakan _directive_ `@auth` dan `@guest`, serta menampilkan foto profil pengguna secara dinamis dari database.
+### 3. Quality Assurance / Pengujian Otomatis (PHPUnit)
+
+Dibuat file _Feature Test_ baru (`ProjectFeatureTest.php`) yang berisi 2 skenario pengujian rute HTTP:
+
+| No | Nama Test | Deskripsi | Status HTTP |
+|----|-----------|-----------|-------------|
+| 1 | `test_login_page_returns_http_200` | Memastikan halaman login dapat diakses | 200 (OK) |
+| 2 | `test_google_redirect_returns_http_302` | Memastikan route Google SSO melakukan redirect | 302 (Redirect) |
+
+Seluruh pengujian dijalankan menggunakan perintah `php artisan test` dan menghasilkan status **PASSED** (27 tests, 63 assertions).
+
+**File terkait:**
+- `tests/Feature/ProjectFeatureTest.php` — File pengujian utama
+- `database/factories/UserFactory.php` — Factory user untuk mendukung pengujian
+- `tests/Feature/ExampleTest.php` — Perbaikan trait `RefreshDatabase`
+
+---
+
+## Cara Menjalankan
+
+### 1. Setup Awal
+```bash
+composer install
+npm install
+php artisan migrate --seed
+php artisan storage:link
+```
+
+### 2. Konfigurasi Environment
+Salin `.env.example` ke `.env`, lalu isi variabel berikut:
+```env
+# Google reCAPTCHA v2
+RECAPTCHA_SITE_KEY=<site_key_dari_google>
+RECAPTCHA_SECRET_KEY=<secret_key_dari_google>
+
+# Google OAuth (SSO)
+GOOGLE_CLIENT_ID=<client_id_dari_google>
+GOOGLE_CLIENT_SECRET=<client_secret_dari_google>
+GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
+```
+
+### 3. Menjalankan Aplikasi
+```bash
+php artisan serve
+npm run dev
+```
+
+### 4. Menjalankan Pengujian
+```bash
+php artisan test
+```
+
+---
+
+## Hasil Pengujian
+
+```
+Tests:    27 passed (63 assertions)
+Duration: 1.89s
+
+✓ ProjectFeatureTest > login page returns http 200
+✓ ProjectFeatureTest > google redirect returns http 302
+✓ AuthenticationTest > login screen can be rendered
+✓ AuthenticationTest > users can authenticate using the login screen
+✓ RegistrationTest > registration screen can be rendered
+✓ RegistrationTest > new users can register
+... dan 21 test lainnya
+```
